@@ -51,6 +51,7 @@ public class AppDataDto {
             app.setTitle(title);
             app.setReleaseDate(date);
             app.setId(id);
+            app.setUrl("https://store.steampowered.com/app/" + id);
         }
         return app;
     }

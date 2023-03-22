@@ -32,6 +32,8 @@ public class HelloApplication extends Application {
         //Optional Css Styling
         scene.getStylesheets().add(CssManager.INSTANCE.getCssUrl());
 
+        stage.getProperties().put("hostServices", this.getHostServices());
+
         //For rounded corners
         stage.initStyle(StageStyle.TRANSPARENT);
 

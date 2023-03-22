@@ -1,7 +1,7 @@
 package com.example.hasmygamereleased.controller;
 
-import com.example.hasmygamereleased.FxNodes.SearchTable;
-import com.example.hasmygamereleased.FxNodes.WatchTable;
+import com.example.hasmygamereleased.fx_nodes.SearchTable;
+import com.example.hasmygamereleased.fx_nodes.WatchTable;
 import com.example.hasmygamereleased.concurrency.ThreadManager;
 import com.example.hasmygamereleased.concurrency.task.AddAppToWatchListTask;
 import com.example.hasmygamereleased.models.app.SteamApp;
@@ -13,6 +13,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.Map;
@@ -43,7 +44,6 @@ public class HelloController implements Initializable {
     }
 
     private void generateWatchedAppsTable() {
-
         new WatchTable(watchTable, threadManager).initializeTable();
 
         watchTable.setVisible(true);

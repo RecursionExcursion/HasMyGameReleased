@@ -1,12 +1,16 @@
-package com.example.hasmygamereleased.FxNodes;
+package com.example.hasmygamereleased.fx_nodes;
 
 import com.example.hasmygamereleased.concurrency.ThreadManager;
 import com.example.hasmygamereleased.concurrency.task.LoadGameListCallable;
 import com.example.hasmygamereleased.concurrency.task.RemoveAppFromWatchListTask;
 import com.example.hasmygamereleased.models.app.SteamApp;
+import javafx.application.HostServices;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -20,6 +24,7 @@ public class WatchTable implements TableViewNode {
     public WatchTable(TableView<SteamApp> table, ThreadManager threadManager) {
         this.table = table;
         this.threadManager = threadManager;
+
     }
 
     @Override
@@ -38,10 +43,12 @@ public class WatchTable implements TableViewNode {
         column2.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getReleaseDate()));
         column2.prefWidthProperty().bind(table.widthProperty().multiply(1.00 / 3));
 
-        TableColumn<SteamApp, SteamApp> deleteCol = new TableColumn<>();
-        deleteCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue()));
-        deleteCol.setCellFactory(p -> new TableCell<>() {
+        TableColumn<SteamApp, SteamApp> buttonCol = new TableColumn<>();
+        buttonCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue()));
+        buttonCol.setCellFactory(p -> new TableCell<>() {
             private final Button deleteButton = new Button("Delete");
+            private final Hyperlink hyperlink = new Hyperlink("Steam Page");
+            final HBox hBox = new HBox(hyperlink, deleteButton);
 
             @Override
             protected void updateItem(final SteamApp app, boolean empty) {
@@ -52,22 +59,34 @@ public class WatchTable implements TableViewNode {
                     return;
                 }
 
-                setGraphic(deleteButton);
+                hBox.setSpacing(5);
+                setGraphic(hBox);
+
+                hyperlink.setTooltip(new Tooltip(app.getUrl()));
+
+                hyperlink.setOnAction(event -> {
+                    Node node = (Node) event.getSource();
+                    Stage thisStage = (Stage) node.getScene().getWindow();
+
+                    HostServices hostServices = (HostServices) thisStage.getProperties().get("hostServices");
+                    hostServices.showDocument(app.getUrl());
+                });
+
+
                 deleteButton.setOnAction(event -> {
                     threadManager.submit(new RemoveAppFromWatchListTask(app));
                     getTableView().getItems().remove(app);
                 });
             }
         });
-        deleteCol.prefWidthProperty().bind(table.widthProperty().multiply(1.00 / 3));
+        buttonCol.prefWidthProperty().bind(table.widthProperty().multiply(1.00 / 3));
 
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         //Populate table
-        table.getColumns().setAll(column1, column2, deleteCol);
+        table.getColumns().setAll(column1, column2, buttonCol);
 
-
-        List<SteamApp> steamApps = null;
+        List<SteamApp> steamApps;
         try {
             steamApps = (List<SteamApp>) gameListFuture.get();
         } catch (InterruptedException | ExecutionException e) {

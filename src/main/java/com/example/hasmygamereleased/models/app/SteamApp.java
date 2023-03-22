@@ -8,6 +8,7 @@ public class SteamApp implements Serializable {
     private String title;
     private long id;
     private String releaseDate;
+    private String url;
 
     public String getTitle() {
         return title;
@@ -31,5 +32,13 @@ public class SteamApp implements Serializable {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

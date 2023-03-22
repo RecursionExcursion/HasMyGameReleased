@@ -1,4 +1,4 @@
-package com.example.hasmygamereleased.FxNodes;
+package com.example.hasmygamereleased.fx_nodes;
 
 public interface TableViewNode {
 

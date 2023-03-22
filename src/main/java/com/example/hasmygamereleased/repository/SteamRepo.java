@@ -5,7 +5,7 @@ import com.example.hasmygamereleased.models.app.SteamApp;
 
 class SteamRepo {
 
-    SteamAPIManager apiManager = new SteamAPIManager();
+    final SteamAPIManager apiManager = new SteamAPIManager();
 
     AppIdMap getAppIdMap() {
         return apiManager.buildAppIdMap();

@@ -9,7 +9,6 @@ module com.example.hasmygamereleased {
     exports com.example.hasmygamereleased.controller;
     exports com.example.hasmygamereleased.models.all_apps;
     exports com.example.hasmygamereleased.models.app;
-    exports com.example.hasmygamereleased.web_scraper;
     exports com.example.hasmygamereleased.repository.api;
     exports com.example.hasmygamereleased.repository.api.dto;
 

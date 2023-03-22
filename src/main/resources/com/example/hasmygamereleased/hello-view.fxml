@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="mainPane" prefHeight="455.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.hasmygamereleased.controller.HelloController">
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="284.0" spacing="20.0">
+               <children>
+                  <Button fx:id="closeButton" mnemonicParsing="false" text="X">
+                     <HBox.margin>
+                        <Insets right="30.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+               <children>
+                  <Button fx:id="watchListButton" mnemonicParsing="false" onAction="#backToWatchListClick" text="Watch List" />
+                  <TextField fx:id="searchTextField" />
+                  <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonClick" text="Search" />
+                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#addToWatchListClick" text="Add" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <StackPane BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
+         </BorderPane.margin>
+         <children>
+            <TableView fx:id="watchTable" prefHeight="200.0" prefWidth="200.0" />
+            <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" />
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>

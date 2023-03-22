@@ -24,7 +24,7 @@ public class HelloApplication extends Application {
 
         Parent root = FXMLLoader.load(Objects.requireNonNull(HelloApplication.class.getResource("hello-view.fxml")));
 
-        enableDragableRoot(stage, root);
+        enableDraggableRoot(stage, root);
 
         Scene scene = new Scene(root, 700, 500);
         //For rounded corner
@@ -41,7 +41,7 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    private void enableDragableRoot(Stage stage, Parent root) {
+    private void enableDraggableRoot(Stage stage, Parent root) {
         root.setOnMousePressed(event -> {
             xoffset = event.getSceneX();
             yoffset = event.getSceneY();

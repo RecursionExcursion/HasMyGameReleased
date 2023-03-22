@@ -1,9 +1,9 @@
 package com.example.hasmygamereleased.controller;
 
-import com.example.hasmygamereleased.fx_nodes.SearchTable;
-import com.example.hasmygamereleased.fx_nodes.WatchTable;
 import com.example.hasmygamereleased.concurrency.ThreadManager;
 import com.example.hasmygamereleased.concurrency.task.AddAppToWatchListTask;
+import com.example.hasmygamereleased.fx_nodes.SearchTable;
+import com.example.hasmygamereleased.fx_nodes.WatchTable;
 import com.example.hasmygamereleased.models.app.SteamApp;
 import com.example.hasmygamereleased.repository.SteamDataInterface;
 import javafx.application.Platform;
@@ -11,9 +11,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.Map;
@@ -38,8 +39,14 @@ public class HelloController implements Initializable {
         //Create Exit button action
         closeButton.addEventFilter(MouseEvent.MOUSE_PRESSED, mouseEvent -> Platform.exit());
 
+        searchTextField.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+            //Disable windows default Undo
+            if (e.getCode() == KeyCode.ENTER) {
+                searchButtonClick();
+                e.consume();
+            }
+        });
         new SteamDataInterface().getAppIdMap();
-
         generateWatchedAppsTable();
     }
 

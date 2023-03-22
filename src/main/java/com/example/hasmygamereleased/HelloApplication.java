@@ -1,6 +1,6 @@
 package com.example.hasmygamereleased;
 
-import com.example.hasmygamereleased.concurrency.task.SaveAllDataTask;
+import com.example.hasmygamereleased.concurrency.task.SaveAllDataRunnable;
 import com.example.hasmygamereleased.scene.CssManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -52,7 +52,7 @@ public class HelloApplication extends Application {
     }
 
     public static void main(String[] args) {
-        Runtime.getRuntime().addShutdownHook(new Thread(new SaveAllDataTask()));
+        Runtime.getRuntime().addShutdownHook(new Thread(new SaveAllDataRunnable()));
         launch();
     }
 }

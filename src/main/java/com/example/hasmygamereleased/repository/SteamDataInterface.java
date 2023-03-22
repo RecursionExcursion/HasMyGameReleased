@@ -7,34 +7,33 @@ import com.example.hasmygamereleased.serialization.SerializationManager;
 
 public class SteamDataInterface {
 
-    SerializationManager serializationManager = SerializationManager.INSTANCE;
-    SteamRepo steamRepo = new SteamRepo();
-
-
+    private static final SerializationManager SERIALIZATION_MANAGER = SerializationManager.INSTANCE;
+    private static final SteamRepo STEAM_REPO = new SteamRepo();
+    
     public AppIdMap getAppIdMap() {
-        AppIdMap map = serializationManager.getAppIdMap();
+        AppIdMap map = SERIALIZATION_MANAGER.getAppIdMap();
         if (map.keySet().isEmpty()) {
-            map = steamRepo.getAppIdMap();
-            serializationManager.saveAppIdMap(map);
+            map = STEAM_REPO.getAppIdMap();
+            SERIALIZATION_MANAGER.saveAppIdMap(map);
         }
         return map;
     }
 
     public SteamApp getAppById(long id) {
-        SteamApp app = steamRepo.getAppById(id);
+        SteamApp app = STEAM_REPO.getAppById(id);
         addSteamAppToList(app);
         return app;
     }
 
     public SteamGameList getGameList(){
-        return serializationManager.getList();
+        return SERIALIZATION_MANAGER.getList();
     }
 
     public void addSteamAppToList(SteamApp app){
-        serializationManager.getList().addGame(app);
+        SERIALIZATION_MANAGER.getList().addGame(app);
     }
 
     public void removeSteamAppFromList(SteamApp app) {
-        serializationManager.getList().remove(app);
+        SERIALIZATION_MANAGER.getList().remove(app);
     }
 }

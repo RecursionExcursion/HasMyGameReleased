@@ -1,15 +1,16 @@
 package com.example.hasmygamereleased.FxNodes;
 
 import com.example.hasmygamereleased.concurrency.ThreadManager;
+import com.example.hasmygamereleased.concurrency.task.LoadGameListCallable;
 import com.example.hasmygamereleased.concurrency.task.RemoveAppFromWatchListTask;
 import com.example.hasmygamereleased.models.app.SteamApp;
-import com.example.hasmygamereleased.repository.SteamDataInterface;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.*;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class WatchTable implements TableViewNode {
 
@@ -23,6 +24,8 @@ public class WatchTable implements TableViewNode {
 
     @Override
     public void initializeTable() {
+
+        Future<?> gameListFuture = threadManager.submit(new LoadGameListCallable());
 
         //Column Set up
         TableColumn<SteamApp, String> column1 = new TableColumn<>("Title");
@@ -62,9 +65,14 @@ public class WatchTable implements TableViewNode {
 
         //Populate table
         table.getColumns().setAll(column1, column2, deleteCol);
-        List<SteamApp> gameList = new SteamDataInterface().getGameList().getGameList();
-        gameList.sort(Comparator.comparing());
 
-        table.getItems().setAll();
+
+        List<SteamApp> steamApps = null;
+        try {
+            steamApps = (List<SteamApp>) gameListFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+        table.getItems().setAll(steamApps);
     }
 }

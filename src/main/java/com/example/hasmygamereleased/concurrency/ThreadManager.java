@@ -6,6 +6,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -18,18 +19,23 @@ public enum ThreadManager {
 
     private final ExecutorService service;
     private final List<Future<?>> completedFutures = new ArrayList<>();
-    private final List<Runnable> submittedTasks = new ArrayList<>();
+    private final List<Future<?>> submittedTasks = new ArrayList<>();
     private final Queue<Task<?>> taskQueue = new ArrayDeque<>();
 
      ThreadManager() {
         this.service = Executors.newFixedThreadPool(DEFAULT_THREADS);
     }
 
-    public <T> Future<T> submit(Task<?> task) {
+    public Future<?> submit(Task<?> task) {
         submittedTasks.add(task);
         Future<?> fut = service.submit(task);
         completedFutures.add(fut);
-        return (Future<T>) fut;
+        return fut;
+    }
+
+    public Future<?> submit(Callable<?> task) {
+//        submittedTasks.add((Future<?>) task);
+        return service.submit(task);
     }
 
     public boolean isServiceRunning() {

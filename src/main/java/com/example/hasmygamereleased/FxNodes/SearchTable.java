@@ -67,6 +67,7 @@ public class SearchTable implements TableViewNode {
 
         //Setting Nodes
         table.getColumns().setAll(column2);
+
         table.setItems(items);
     }
 }

@@ -22,18 +22,16 @@ import java.util.concurrent.Future;
 public class WatchTableInitializer implements TableViewInitializer {
 
     private final TableView<SteamApp> table;
-    private final ThreadManager threadManager;
 
-    public WatchTableInitializer(TableView<SteamApp> table, ThreadManager threadManager) {
+
+    public WatchTableInitializer(TableView<SteamApp> table) {
         this.table = table;
-        this.threadManager = threadManager;
-
     }
 
     @Override
     public void initializeTable() {
 
-        Future<?> gameListFuture = threadManager.submit(new LoadGameListCallable());
+        Future<?> gameListFuture = ThreadManager.INSTANCE.submit(new LoadGameListCallable());
 
         //Column Set up
         TableColumn<SteamApp, String> column1 = new TableColumn<>("Title");
@@ -47,7 +45,7 @@ public class WatchTableInitializer implements TableViewInitializer {
             @Override
             protected void updateItem(final SteamApp app, boolean empty) {
                 super.updateItem(app, empty);
-                if(app != null){
+                if (app != null) {
                     setText(app.getReleaseDate());
                     if (DTFormatter.format(app.getReleaseDate()).isAfter(LocalDate.now())) {
                         //TODO color fill doesn't work
@@ -90,18 +88,17 @@ public class WatchTableInitializer implements TableViewInitializer {
 
 
                 deleteButton.setOnAction(event -> {
-                    threadManager.submit(new RemoveAppFromWatchListTask(app));
+                    ThreadManager.INSTANCE.submit(new RemoveAppFromWatchListTask(app));
                     getTableView().getItems().remove(app);
                 });
             }
         });
 
         buttonCol.prefWidthProperty().bind(table.widthProperty().multiply(1.00 / 3));
-
         table.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         //Populate table
-        table.getColumns().setAll(column1, column2, buttonCol);
+        table.getColumns().setAll(List.of(column1, column2, buttonCol));
 
         List<SteamApp> steamApps;
         try {

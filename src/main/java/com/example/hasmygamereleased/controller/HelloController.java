@@ -7,19 +7,26 @@ import com.example.hasmygamereleased.fx_nodes.SearchTableInitializer;
 import com.example.hasmygamereleased.fx_nodes.WatchTableInitializer;
 import com.example.hasmygamereleased.models.app.SteamApp;
 import com.example.hasmygamereleased.repository.SteamDataInterface;
-import javafx.application.Platform;
+import com.example.hasmygamereleased.util.ClockLock;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 public class HelloController implements Initializable {
 
@@ -35,17 +42,15 @@ public class HelloController implements Initializable {
     public TableView<SteamApp> watchTable;
     public TableView<Map.Entry<Long, String>> searchTable;
 
-    private boolean isDisplayingWatchTable;
-
+    private final ClockLock refreshButtonClockLock = new ClockLock(30);
     private final ThreadManager threadManager = ThreadManager.INSTANCE;
+
+    private final Supplier<Stage> currentStage = () -> (Stage) mainPane.getScene().getWindow();
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //Create Exit button action
-        closeButton.addEventFilter(MouseEvent.MOUSE_PRESSED, mouseEvent -> Platform.exit());
-
         searchTextField.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-            //Disable windows default Undo
             if (e.getCode() == KeyCode.ENTER) {
                 searchButtonClick();
                 e.consume();
@@ -53,18 +58,27 @@ public class HelloController implements Initializable {
         });
         new SteamDataInterface().getAppIdMap();
         displayWatchedAppsTable();
+        setGraphicOnRefreshButton();
+    }
+
+    private void setGraphicOnRefreshButton() {
+        Path currentRelativePath = Paths.get("");
+        String absPath = currentRelativePath.toAbsolutePath().toString();
+
+        Image image = new Image(absPath + "/src/main/resources/images/arrow-refresh-reload-icon-29.png",
+                                25, 25, false, true);
+        ImageView imageView = new ImageView(image);
+        refreshDataButton.setGraphic(imageView);
     }
 
     private void displayWatchedAppsTable() {
-        new WatchTableInitializer(watchTable, threadManager).initializeTable();
+        new WatchTableInitializer(watchTable).initializeTable();
 
         watchTable.setVisible(true);
         searchTable.setVisible(false);
 
         watchListButton.setVisible(false);
         addButton.setVisible(false);
-
-        isDisplayingWatchTable = true;
     }
 
     public void displaySearchTable() {
@@ -76,8 +90,6 @@ public class HelloController implements Initializable {
 
         watchListButton.setVisible(true);
         addButton.setVisible(true);
-
-        isDisplayingWatchTable = false;
     }
 
     public void addToWatchListClick() {
@@ -98,6 +110,17 @@ public class HelloController implements Initializable {
     }
 
     public void refreshDataClick() {
-        ThreadManager.INSTANCE.submit(new RefreshGameListTask(watchTable));
+        if(!refreshButtonClockLock.isLocked(LocalDateTime.now())){
+            ThreadManager.INSTANCE.submit(new RefreshGameListTask(watchTable));
+            refreshButtonClockLock.lock(LocalDateTime.now());
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Game data is already up to date");
+            alert.show();
+        }
+    }
+
+    public void closeApplicationClick( ) {
+        currentStage.get().close();
     }
 }

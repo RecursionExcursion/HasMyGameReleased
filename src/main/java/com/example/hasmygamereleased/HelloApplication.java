@@ -2,6 +2,7 @@ package com.example.hasmygamereleased;
 
 import com.example.hasmygamereleased.concurrency.task.SaveAllDataRunnable;
 import com.example.hasmygamereleased.scene.CssManager;
+import com.example.hasmygamereleased.util.DraggableRoot;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,7 +25,7 @@ public class HelloApplication extends Application {
 
         Parent root = FXMLLoader.load(Objects.requireNonNull(HelloApplication.class.getResource("hello-view.fxml")));
 
-        enableDraggableRoot(stage, root);
+        new DraggableRoot().enableDraggableRoot(stage, root);
 
         Scene scene = new Scene(root, 700, 500);
         //For rounded corner
@@ -41,18 +42,7 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    private void enableDraggableRoot(Stage stage, Parent root) {
-        root.setOnMousePressed(event -> {
-            xoffset = event.getSceneX();
-            yoffset = event.getSceneY();
-        });
-
-        root.setOnMouseDragged(e -> {
-            stage.setX(e.getScreenX() - xoffset);
-            stage.setY(e.getScreenY() - yoffset);
-        });
-    }
-
+    
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(new SaveAllDataRunnable()));
         launch();

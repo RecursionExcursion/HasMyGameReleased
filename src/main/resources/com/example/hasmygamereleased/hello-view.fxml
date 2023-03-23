@@ -15,26 +15,29 @@
          <HBox alignment="CENTER_RIGHT" prefHeight="52.0" prefWidth="284.0" spacing="20.0">
             <Button fx:id="closeButton" mnemonicParsing="false" text="X">
                <HBox.margin>
-                  <Insets right="30.0"/>
+                  <Insets right="30.0" />
                </HBox.margin>
             </Button>
          </HBox>
          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
-            <Button fx:id="watchListButton" mnemonicParsing="false" onAction="#backToWatchListClick"
-                    text="Watch List"/>
-            <TextField fx:id="searchTextField"/>
-            <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonClick" text="Search"/>
-            <Button fx:id="addButton" mnemonicParsing="false" onAction="#addToWatchListClick" text="Add"/>
+            <Button fx:id="refreshDataButton" mnemonicParsing="false" text="\@" onAction="#refreshDataClick"/>
+            <Button fx:id="watchListButton" mnemonicParsing="false" onAction="#backToWatchListClick" text="Watch List" />
+            <TextField fx:id="searchTextField" />
+            <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButtonClick" text="Search" />
+            <Button fx:id="addButton" mnemonicParsing="false" onAction="#addToWatchListClick" text="Add" />
+            <padding>
+               <Insets right="25.0" />
+            </padding>
          </HBox>
       </VBox>
    </top>
    <center>
       <StackPane BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets bottom="20.0" left="20.0" right="20.0"/>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
          </BorderPane.margin>
-         <TableView fx:id="watchTable" prefHeight="200.0" prefWidth="200.0"/>
-         <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0"/>
+         <TableView fx:id="watchTable" prefHeight="200.0" prefWidth="200.0" />
+         <TableView fx:id="searchTable" prefHeight="200.0" prefWidth="200.0" />
       </StackPane>
    </center>
 </BorderPane>

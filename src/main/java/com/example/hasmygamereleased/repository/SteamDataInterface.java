@@ -36,4 +36,8 @@ public class SteamDataInterface {
     public void removeSteamAppFromList(SteamApp app) {
         SERIALIZATION_MANAGER.getList().remove(app);
     }
+
+    public void overwriteGameList(SteamGameList gameList){
+        SERIALIZATION_MANAGER.saveGameList(gameList);
+    }
 }

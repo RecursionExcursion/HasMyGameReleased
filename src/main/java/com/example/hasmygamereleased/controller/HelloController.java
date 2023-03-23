@@ -2,8 +2,9 @@ package com.example.hasmygamereleased.controller;
 
 import com.example.hasmygamereleased.concurrency.ThreadManager;
 import com.example.hasmygamereleased.concurrency.task.AddAppToWatchListTask;
-import com.example.hasmygamereleased.fx_nodes.SearchTable;
-import com.example.hasmygamereleased.fx_nodes.WatchTable;
+import com.example.hasmygamereleased.concurrency.task.RefreshGameListTask;
+import com.example.hasmygamereleased.fx_nodes.SearchTableInitializer;
+import com.example.hasmygamereleased.fx_nodes.WatchTableInitializer;
 import com.example.hasmygamereleased.models.app.SteamApp;
 import com.example.hasmygamereleased.repository.SteamDataInterface;
 import javafx.application.Platform;
@@ -23,16 +24,20 @@ import java.util.ResourceBundle;
 public class HelloController implements Initializable {
 
     public BorderPane mainPane;
+    public TextField searchTextField;
+    //Buttons
     public Button closeButton;
     public Button searchButton;
-    public TextField searchTextField;
     public Button watchListButton;
     public Button addButton;
-
-    private final ThreadManager threadManager = ThreadManager.INSTANCE;
-
+    public Button refreshDataButton;
+    //TableViews
     public TableView<SteamApp> watchTable;
     public TableView<Map.Entry<Long, String>> searchTable;
+
+    private boolean isDisplayingWatchTable;
+
+    private final ThreadManager threadManager = ThreadManager.INSTANCE;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -47,32 +52,37 @@ public class HelloController implements Initializable {
             }
         });
         new SteamDataInterface().getAppIdMap();
-        generateWatchedAppsTable();
+        displayWatchedAppsTable();
     }
 
-    private void generateWatchedAppsTable() {
-        new WatchTable(watchTable, threadManager).initializeTable();
+    private void displayWatchedAppsTable() {
+        new WatchTableInitializer(watchTable, threadManager).initializeTable();
 
         watchTable.setVisible(true);
         searchTable.setVisible(false);
+
         watchListButton.setVisible(false);
         addButton.setVisible(false);
+
+        isDisplayingWatchTable = true;
     }
 
-    public void generateSearchTable() {
+    public void displaySearchTable() {
 
-        new SearchTable(searchTable, searchTextField.getText()).initializeTable();
+        new SearchTableInitializer(searchTable, searchTextField.getText()).initializeTable();
 
         watchTable.setVisible(false);
         searchTable.setVisible(true);
+
         watchListButton.setVisible(true);
         addButton.setVisible(true);
+
+        isDisplayingWatchTable = false;
     }
 
     public void addToWatchListClick() {
         TableView.TableViewSelectionModel<Map.Entry<Long, String>> selectionModel = searchTable.getSelectionModel();
         if (!selectionModel.isEmpty()) {
-
             threadManager.submit(
                     new AddAppToWatchListTask(selectionModel.getSelectedItem(), watchTable.getItems())
             );
@@ -80,10 +90,14 @@ public class HelloController implements Initializable {
     }
 
     public void backToWatchListClick() {
-        generateWatchedAppsTable();
+        displayWatchedAppsTable();
     }
 
     public void searchButtonClick() {
-        generateSearchTable();
+        displaySearchTable();
+    }
+
+    public void refreshDataClick() {
+        ThreadManager.INSTANCE.submit(new RefreshGameListTask(watchTable));
     }
 }

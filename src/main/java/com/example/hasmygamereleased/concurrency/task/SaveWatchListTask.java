@@ -1,24 +1,25 @@
 package com.example.hasmygamereleased.concurrency.task;
 
 import com.example.hasmygamereleased.models.all_apps.SteamGameList;
+import com.example.hasmygamereleased.models.app.SteamApp;
+import com.example.hasmygamereleased.repository.SteamDataInterface;
 import javafx.concurrent.Task;
 
-public class SaveWatchListTask extends Task<Boolean> {
+import java.util.List;
 
-    private final SteamGameList gameList;
+public class SaveWatchListTask extends Task<Object> {
 
-    public SaveWatchListTask(SteamGameList gameList) {
-        this.gameList = gameList;
+    private final List<SteamApp> applist;
+
+    public SaveWatchListTask(List<SteamApp> applist) {
+        this.applist = applist;
     }
 
     @Override
-    protected Boolean call() {
-        try {
-//            new FooInterface().saveGameList(gameList);
-//            SerializationManager.INSTANCE.saveGameList(gameList);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    protected Object call() {
+        SteamGameList steamGameList = new SteamGameList();
+        applist.forEach(steamGameList::addGame);
+        new SteamDataInterface().overwriteGameList(steamGameList);
+        return null;
     }
 }

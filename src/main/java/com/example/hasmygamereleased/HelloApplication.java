@@ -16,9 +16,6 @@ import java.util.Objects;
 
 public class HelloApplication extends Application {
 
-    private double xoffset;
-    private double yoffset;
-
     @Override
     public void start(Stage stage) throws IOException {
 
@@ -42,7 +39,7 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    
+
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(new SaveAllDataRunnable()));
         launch();

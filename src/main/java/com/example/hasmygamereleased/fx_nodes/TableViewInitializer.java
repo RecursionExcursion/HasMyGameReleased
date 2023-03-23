@@ -1,6 +1,6 @@
 package com.example.hasmygamereleased.fx_nodes;
 
-public interface TableViewNode {
+public interface TableViewInitializer {
 
     void initializeTable();
 }

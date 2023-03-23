@@ -19,12 +19,12 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class WatchTable implements TableViewNode {
+public class WatchTableInitializer implements TableViewInitializer {
 
     private final TableView<SteamApp> table;
     private final ThreadManager threadManager;
 
-    public WatchTable(TableView<SteamApp> table, ThreadManager threadManager) {
+    public WatchTableInitializer(TableView<SteamApp> table, ThreadManager threadManager) {
         this.table = table;
         this.threadManager = threadManager;
 

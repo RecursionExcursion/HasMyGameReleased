@@ -23,7 +23,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Supplier;
@@ -110,9 +109,9 @@ public class HelloController implements Initializable {
     }
 
     public void refreshDataClick() {
-        if(!refreshButtonClockLock.isLocked(LocalDateTime.now())){
+        if(!refreshButtonClockLock.isLocked()){
             ThreadManager.INSTANCE.submit(new RefreshGameListTask(watchTable));
-            refreshButtonClockLock.lock(LocalDateTime.now());
+            refreshButtonClockLock.lock();
         } else {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Game data is already up to date");

@@ -34,11 +34,15 @@ public class WatchTableInitializer implements TableViewInitializer {
         Future<?> gameListFuture = ThreadManager.INSTANCE.submit(new LoadGameListCallable());
 
         //Column Set up
+
+        //Col 1
         TableColumn<SteamApp, String> column1 = new TableColumn<>("Title");
-        column1.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTitle()));
+//        column1.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue().getTitle()));
         column1.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getTitle()));
         column1.prefWidthProperty().bind(table.widthProperty().multiply(1.00 / 3));
 
+
+        //Col 2
         TableColumn<SteamApp, SteamApp> column2 = new TableColumn<>("Release Date");
         column2.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue()));
         column2.setCellFactory(p -> new TableCell<>() {
@@ -51,12 +55,16 @@ public class WatchTableInitializer implements TableViewInitializer {
                         //TODO color fill doesn't work
                         setTextFill(Color.RED);
                     }
+                } else {
+                    setText("");
                 }
             }
         });
 
         column2.prefWidthProperty().bind(table.widthProperty().multiply(1.00 / 3));
 
+
+        //Col 3
         TableColumn<SteamApp, SteamApp> buttonCol = new TableColumn<>();
         buttonCol.setCellValueFactory(p -> new ReadOnlyObjectWrapper<>(p.getValue()));
         buttonCol.setCellFactory(p -> new TableCell<>() {

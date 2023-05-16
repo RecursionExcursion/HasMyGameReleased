@@ -12,15 +12,16 @@ public class ClockLock {
         this.lockDurationInMinutes = lockDurationInMinutes;
     }
 
-    public boolean isLocked(LocalDateTime now) {
+    public boolean isLocked() {
         if(unlockTime != null){
+            LocalDateTime now = LocalDateTime.now();
             isLocked = now.isBefore(unlockTime);
         }
         return isLocked;
     }
 
-    public void lock(LocalDateTime now) {
-        unlockTime = now.plusMinutes(lockDurationInMinutes);
+    public void lock() {
+        unlockTime = LocalDateTime.now().plusMinutes(lockDurationInMinutes);
         isLocked = true;
     }
 }

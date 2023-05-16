@@ -21,10 +21,11 @@ public class RefreshGameListTask extends Task<Object> {
 
     @Override
     protected Object call() throws Exception {
+
         Function<SteamApp, Future<SteamApp>> sendAppsToTheFuture = app ->
                 (Future<SteamApp>) ThreadManager.INSTANCE.submit(new UpdateAppCallable(app));
 
-        Function<Future<SteamApp>, SteamApp> getFuture = future -> {
+        Function<Future<SteamApp>, SteamApp> getAppFromFuture = future -> {
             try {
                 return future.get();
             } catch (InterruptedException | ExecutionException e) {
@@ -35,8 +36,9 @@ public class RefreshGameListTask extends Task<Object> {
         List<SteamApp> newApps = watchTable.getItems()
                                            .stream()
                                            .map(sendAppsToTheFuture)
-                                           .map(getFuture)
+                                           .map(getAppFromFuture)
                                            .toList();
+
         watchTable.setItems(FXCollections.observableArrayList(newApps));
         ThreadManager.INSTANCE.submit(new SaveWatchListTask(newApps));
         return null;
